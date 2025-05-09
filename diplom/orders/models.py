@@ -1,15 +1,19 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
-class Task(models.Model):
-    id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
-    
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('В ожидании', 'В ожидании'),
+        ('Готово', 'Готово'),
+        ('Отклонено', 'Отклонено'),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    group = models.CharField(max_length=10)
+    quanity = models.CharField(max_length=20)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='В ожидании')
+    comment = models.CharField(max_length=120, blank=True, default='')
+
     def __str__(self):
-        return self.title
-    
-    class Meta:
-        db_table = 'task'
+        return f"{self.name} ({self.group}) - {self.status}"

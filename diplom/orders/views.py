@@ -1,28 +1,45 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .forms import TaskForm
-from .models import Task
+from .models import Order
+from .forms import OrderForm, UpdateOrderForm
+
 
 @login_required
 def index(request):
-    tasks = request.user.tasks.all()
-    return render(request, 'orders/index.html', {'title': 'Home', 'tasks': tasks})
+    orders = Order.objects.filter(user=request.user)
+    return render(request, "orders/index.html", {"orders": orders})
+
 
 @login_required
-def new_task(request):
-    if request.method == 'POST':
-        form = TaskForm(request.POST)
+def create_order(request):
+    orders = Order.objects.filter(user=request.user)
+    if request.method == "POST":
+        form = OrderForm(request.POST)
         if form.is_valid():
-            task = Task(
-                title=form.cleaned_data['title'],
-                description=form.cleaned_data['description'],
-                user=request.user
-            )
-            task.save()
-            messages.success(request, 'Your task has been created!')
-            return redirect('orders:index')
+            order = form.save(commit=False)
+            order.user = request.user
+            order.save()
+            return redirect("orders:index")
     else:
-        form = TaskForm()
-    
-    return render(request, 'orders/task_form.html', {'form': form, 'title': 'New Task'})
+        form = OrderForm()
+    return render(request, "orders/student.html", {"form": form, "orders": orders})
+
+
+@login_required
+def secretary_view(request):
+    if not request.user.is_staff:
+        return redirect("orders:index")
+
+    orders = Order.objects.filter(status="В ожидании")
+
+    if request.method == "POST":
+        order_id = request.POST.get("order_id")
+        order = get_object_or_404(Order, id=order_id)
+        form = UpdateOrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect("orders:secretary")
+    else:
+        form = UpdateOrderForm()
+
+    return render(request, "orders/secretary.html", {"orders": orders, "form": form})

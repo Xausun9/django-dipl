@@ -1,56 +1,34 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.urls import reverse
-from users.forms import LoginForm, RegistrationForm
-from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
+
+from users.forms import UserRegistrationForm, ProfileUpdateForm
 
 
-def login_view(request):
-    if request.user.is_authenticated:
-        return redirect("orders:index")
-
+def register(request):
     if request.method == "POST":
-        form = LoginForm(request.POST)
+        form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                next_page = request.GET.get("next", reverse("orders:index"))
-                return redirect(next_page)
-            else:
-                messages.error(request, "Invalid username or password")
-    else:
-        form = LoginForm()
-
-    return render(request, "users/login.html", {"form": form, "title": "Sign In"})
-
-
-def register_view(request):
-    if request.user.is_authenticated:
-        return redirect("orders:index")
-
-    if request.method == "POST":
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data["username"],
-                email=form.cleaned_data["email"],
-                password=form.cleaned_data["password"],
-            )
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data["password"])
             user.save()
-            messages.success(request, "Congratulations, you are now a registered user!")
-            return redirect("users:login")
+            login(request, user)
+            return redirect("users:complete_profile")
     else:
-        form = RegistrationForm()
+        form = UserRegistrationForm()
+    return render(request, "users/register.html", {"form": form})
 
-    return render(request, "users/register.html", {"form": form, "title": "Register"})
+
+def complete_profile(request):
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("orders:create_order")
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+    return render(request, "users/complete_profile.html", {"form": form})
 
 
-@login_required
 def logout_view(request):
     logout(request)
-    return redirect("orders:index")
+    return redirect("users:login")

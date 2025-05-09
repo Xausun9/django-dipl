@@ -1,5 +1,12 @@
 from django import forms
+from .models import Order
 
-class TaskForm(forms.Form):
-    title = forms.CharField(max_length=100)
-    description = forms.CharField(widget=forms.Textarea)
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['name', 'group', 'quanity']
+
+class UpdateOrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['status', 'comment']

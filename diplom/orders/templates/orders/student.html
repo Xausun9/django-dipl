@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Заказ справки</title>
+</head>
+<body>
+<main>
+    <section>
+        <div>
+            <h1>Заказ справки</h1>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class='page-button'>Заказать</button>
+        </form>
+
+        <div class="table">
+            <h2>Ваш номер</h2>
+            {% if orders %}
+                <p align='center' style='font-size: 32px; margin: 2px'>{{ orders.last.id }}</p>
+            {% endif %}
+        </div>
+
+        <div class="nogi1">
+            <a href="{% url 'orders:index' %}"><button class="niz">Главная Страница</button></a>
+        </div>
+    </section>
+</main>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function () {
+        alert('Заявка успешно отправлена!');
+    });
+</script>
+</body>
+</html>
