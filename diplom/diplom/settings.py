@@ -1,4 +1,5 @@
 from pathlib import Path
+import dj_database_url
 import os
 
 from dotenv import load_dotenv
@@ -61,26 +62,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "diplom.wsgi.application"
 
-DB_LIVE = os.environ.get("DB_LIVE")
+DATABASES = {
+    "default": {
+        "default": dj_database_url.config(conn_max_age=600, ssl_require=True),
+    }
+}
 
-if DB_LIVE in ["False", False]:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("DN_NAME"),
-            "USER": os.environ.get("DB_USER"),
-            "PASSWORD": os.environ.get("DB_PASSWORD"),
-            "HOST": os.environ.get("DB_HOST"),
-            "PORT": os.environ.get("DB_PORT"),
-        }
-    }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
