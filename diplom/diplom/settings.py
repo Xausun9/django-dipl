@@ -58,7 +58,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "diplom.wsgi.application"
 
-DB_LIVE = os.getenv("DB_LIVE")
+DB_LIVE = os.environ.get("DB_LIVE")
 
 if DB_LIVE in ["False", False]:
     DATABASES = {
@@ -71,11 +71,11 @@ else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DN_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
+            "NAME": os.environ.get("DN_NAME"),
+            "USER": os.environ.get("DB_USER"),
+            "PASSWORD": os.environ.get("DB_PASSWORD"),
+            "HOST": os.environ.get("DB_HOST"),
+            "PORT": os.environ.get("DB_PORT"),
         }
     }
 
