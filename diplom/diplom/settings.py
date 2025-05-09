@@ -63,7 +63,15 @@ TEMPLATES = [
 WSGI_APPLICATION = "diplom.wsgi.application"
 
 DATABASES = {
-    "default": dj_database_url.config(conn_max_age=600, ssl_require=True),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("PGDATABASE"),
+        "USER": os.environ.get("PGUSER"),
+        "PASSWORD": os.environ.get("PGPASSWORD"),
+        "HOST": os.environ.get("PGHOST"),
+        "PORT": os.environ.get("PGPORT"),
+        "OPTIONS": {"sslmode": "require"},
+    }
 }
 
 # DATABASES = {
