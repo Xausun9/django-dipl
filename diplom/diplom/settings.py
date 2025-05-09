@@ -14,7 +14,10 @@ SECRET_KEY = "django-insecure-l)3zupdj+g!8(4d-51^@nafd7=z^_3&ayb-n!%65&i25^_!%&p
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://django-dipl-production.up.railway.app",
+    "127.0.0.1:8000",
+]
 
 INSTALLED_APPS = [
     "orders.apps.OrdersConfig",
