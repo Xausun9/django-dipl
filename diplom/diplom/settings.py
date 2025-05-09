@@ -63,9 +63,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "diplom.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "default": dj_database_url.config(conn_max_age=600, ssl_require=True),
-    }
+    "default": dj_database_url.config(conn_max_age=600, ssl_require=True),
 }
 
 # DATABASES = {
