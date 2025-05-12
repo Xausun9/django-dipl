@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from allauth.account.models import EmailAddress
 
 
 class CustomUserManager(BaseUserManager):
@@ -17,11 +18,28 @@ class CustomUserManager(BaseUserManager):
 
         extra_field.setdefault("is_staff", True)
         extra_field.setdefault("is_superuser", True)
-        return self.create_user(email, password, **extra_field)
+        extra_field.setdefault("role", "admin")
+        user = self.create_user(email, password, **extra_field)
+
+        EmailAddress.objects.get_or_create(
+            user=user,
+            email=user.email,
+            defaults={"verified": True, "primary": True}
+        )
+
+        return user
 
 
 class CustomUser(AbstractUser, PermissionsMixin):
     username = None
+
+    ROLE_CHOICES = (
+        ("student", "Студент"),
+        ("secretary", "Секретарь"),
+        ("admin", "Администратор"),
+    )
+
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
 
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255, blank=True)
@@ -32,9 +50,8 @@ class CustomUser(AbstractUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email if not self.full_name else self.full_name
-    

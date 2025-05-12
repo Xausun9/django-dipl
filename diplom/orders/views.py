@@ -6,8 +6,14 @@ from .forms import OrderForm, UpdateOrderForm
 
 @login_required
 def index(request):
-    orders = Order.objects.filter(user=request.user)
-    return render(request, "orders/index.html", {"orders": orders})
+    user = request.user
+
+    if user.role == "student":
+        return redirect("orders:create_order")
+    elif user.role == "secretary":
+        return redirect("orders:secretary")
+    elif user.role == "admin":
+        return redirect("users:admin_create_user")
 
 
 @login_required
@@ -18,6 +24,8 @@ def create_order(request):
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
+            order.name = request.user.full_name
+            order.group = request.user.group
             order.save()
             return redirect("orders:index")
     else:
@@ -27,8 +35,8 @@ def create_order(request):
 
 @login_required
 def secretary_view(request):
-    if not request.user.is_staff:
-        return redirect("orders:index")
+    if not request.user.is_authenticated or request.user.role != "secretary":
+        return redirect("users:login")
 
     orders = Order.objects.filter(status="В ожидании")
 
