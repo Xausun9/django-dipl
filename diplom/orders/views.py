@@ -27,7 +27,6 @@ def create_order(request):
             order.name = request.user.full_name
             order.group = request.user.group
             order.save()
-            return redirect("orders:index")
     else:
         form = OrderForm()
     return render(request, "orders/student.html", {"form": form, "orders": orders})
