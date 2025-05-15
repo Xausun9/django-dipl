@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <h2>{% trans "Login" %}</h2>
+    <form method="post" action="{% url 'account_login' %}">
+    {% csrf_token %}
+
+    <p>
+        {{ form.login.label_tag }}<br>
+        {{ form.login }}
+        {{ form.login.errors }}
+    </p>
+
+    <p>
+        {{ form.password.label_tag }}<br>
+        {{ form.password }}
+        {{ form.password.errors }}
+        {# Ссылка "Забыли пароль?" убрана из help_text #}
+    </p>
+
+    {% comment %} <p style="display: flex; align-items: center; gap: 8px;">
+        <label for="{{ form.remember.id_for_label }}">Запомнить меня</label>
+        {{ form.remember }}
+        {{ form.remember.errors }}
+    </p> {% endcomment %}
+
+    <button type="submit">Войти</button>
+</form>
+
+    <div class="form-links">
+        <a href="{% url 'account_reset_password' %}">Забыли пароль?</a>
+        <span>&middot;</span>
+        <a href="{% url 'account_signup' %}">Зарегистрироваться</a>
+    </div>
+</div>
+
+<style>
+    .form-card {
+        max-width: 400px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 30px 24px;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-card h2 {
+        text-align: center;
+        margin-bottom: 24px;
+        font-size: 24px;
+        font-weight: 600;
+        color: #222;
+    }
+
+    .form-card form p {
+        margin-bottom: 16px;
+    }
+
+    .form-card button {
+        margin-top: 12px;
+    }
+
+    .form-links {
+        margin-top: 24px;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .form-links a {
+        color: var(--accent);
+        text-decoration: none;
+        margin: 0 8px;
+    }
+
+    .form-links a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+        .form-card {
+            padding: 20px 16px;
+        }
+    }
+</style>
+{% endblock %}

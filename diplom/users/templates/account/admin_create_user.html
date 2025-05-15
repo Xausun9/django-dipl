@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Админ-панель{% endblock %}
+
+{% block content %}
+<h1>Пользователи</h1>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Поиск по email или ФИО" value="{{ query }}">
+    <button type="submit">Найти</button>
+</form>
+
+{% if users %}
+<table>
+    <tr>
+        <th>ФИО / Email</th>
+        <th>Роль</th>
+        <th>Группа</th>
+        <th>Подтверждён</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.full_name|default:user.email }}</td>
+        <td>{{ user.get_role_display }}</td>
+        <td>{{ user.group|default:"—" }}</td>
+        <td>{{ user.is_email_verified|yesno:"Да,Нет" }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<div class="empty">Нет пользователей по заданному запросу.</div>
+{% endif %}
+
+<h2>Создать нового пользователя</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать</button>
+</form>
+{% endblock %}

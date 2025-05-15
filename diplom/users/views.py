@@ -19,7 +19,7 @@ def complete_profile(request):
             return redirect("orders:index")
     else:
         form = ProfileUpdateForm(instance=request.user)
-    return render(request, "users/complete_profile.html", {"form": form})
+    return render(request, "account/complete_profile.html", {"form": form})
 
 
 def admin_create_user(request):
@@ -67,7 +67,7 @@ def admin_create_user(request):
     else:
         form = AdminUserCreationForm()
 
-    return render(request, "users/admin_create_user.html", {
+    return render(request, "account/admin_create_user.html", {
         "form": form,
         "users": users,
         "query": query,

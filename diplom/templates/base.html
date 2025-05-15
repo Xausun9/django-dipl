@@ -2,23 +2,208 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Справки{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #fff;
+            --text-color: #222;
+            --accent: #4a90e2;
+            --accent-hover: #336ec4;
+            --border-color: #e0e0e0;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        header {
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 15px;
+        }
+
+        nav a, nav span {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        main.container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            padding: 32px;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+            text-align: center;
+            font-weight: 600;
+            color: #111;
+        }
+
+        form {
+            margin-top: 24px;
+        }
+
+        input, select, textarea, button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin-top: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--accent);
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        table {
+            width: 100%;
+            margin-top: 24px;
+            border-collapse: collapse;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f7f9fa;
+            font-weight: 600;
+        }
+
+        .status {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 32px;
+            color: #888;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            main.container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            input, select, textarea, button {
+                font-size: 15px;
+            }
+
+            th, td {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="#">Справки</a>
-            <div class="d-flex">
-                <span class="navbar-text me-3">{{ request.user.full_name }}</span>
-                <a class="btn btn-outline-secondary btn-sm" href="{% url 'users:logout' %}">Выйти</a>
-            </div>
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-file-lines"></i> Справки
         </div>
-    </nav>
+        <nav>
+            {% if user.is_authenticated %}
+                <span>{{ user.full_name|default:user.email }}</span>
+                <a href="{% url 'account_logout' %}">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Выйти
+                </a>
+            {% endif %}
+        </nav>
+    </header>
 
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>

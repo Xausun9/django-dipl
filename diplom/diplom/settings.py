@@ -151,3 +151,5 @@ SITE_ID = 1
 ACCOUNT_FORMS = {
     'signup': 'users.forms.CustomSignupForm',
 }
+
+ACCOUNT_LOGOUT_ON_GET = True

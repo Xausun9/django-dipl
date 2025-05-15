@@ -35,7 +35,7 @@ def create_order(request):
 
 @login_required
 def secretary_view(request):
-    if not request.user.is_authenticated or request.user.role != "secretary":
+    if not request.user.is_authenticated or request.user.role not in ["secretary", "admin"]:
         return redirect("users:login")
 
     orders = Order.objects.filter(status="В ожидании")

@@ -11,7 +11,7 @@ class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     group = models.CharField(max_length=10)
-    quanity = models.CharField(max_length=20)
+    quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='В ожидании')
     comment = models.CharField(max_length=120, blank=True, default='')
 
