@@ -24,12 +24,15 @@
                 <a href="{% url 'orders:create_order' %}">
                     <i class="fa-solid fa-plus"></i> Страница студента
                 </a>
+                <a href="{% url 'users:admin_create_user' %}">
+                    <i class="fa-solid fa-plus"></i> Страница администратора
+                </a>
             {% endif %}
             
             <a href="{% url 'users:complete_profile' %}" class="user-link">
                 {{ user.full_name|default:user.email }}
             </a>
-            
+
             <a href="{% url 'account_logout' %}">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Выйти
             </a>
