@@ -18,7 +18,7 @@ def index(request):
 
 @login_required
 def create_order(request):
-    orders = Order.objects.filter(user=request.user)
+    orders = Order.objects.filter(user=request.user).order_by("-created_at")
     if request.method == "POST":
         form = OrderForm(request.POST)
         if form.is_valid():
@@ -27,6 +27,7 @@ def create_order(request):
             order.name = request.user.full_name
             order.group = request.user.group
             order.save()
+            return redirect("orders:create_order")
     else:
         form = OrderForm()
     return render(request, "orders/student.html", {"form": form, "orders": orders})
@@ -35,9 +36,9 @@ def create_order(request):
 @login_required
 def secretary_view(request):
     if not request.user.is_authenticated or request.user.role not in ["secretary", "admin"]:
-        return redirect("users:login")
+        return redirect("orders:index")
 
-    orders = Order.objects.filter(status="В ожидании")
+    orders = Order.objects.filter(status="in_anticipation")
 
     if request.method == "POST":
         order_id = request.POST.get("order_id")
