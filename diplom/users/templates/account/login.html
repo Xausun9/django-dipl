@@ -1,35 +1,40 @@
 {% extends "base.html" %}
-{% load i18n %}
 
 {% block title %}Вход{% endblock %}
 
 {% block content %}
 <div class="form-card">
-    <h2>{% trans "Login" %}</h2>
+    <h2>Вход</h2>
     <form method="post" action="{% url 'account_login' %}">
-    {% csrf_token %}
+        {% csrf_token %}
 
-    <p>
-        {{ form.login.label_tag }}<br>
-        {{ form.login }}
-        {{ form.login.errors }}
-    </p>
+        {% if form.non_field_errors %}
+        <div class="form-error">
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-    <p>
-        {{ form.password.label_tag }}<br>
-        {{ form.password }}
-        {{ form.password.errors }}
-        {# Ссылка "Забыли пароль?" убрана из help_text #}
-    </p>
+        <div class="form-group">
+            {{ form.login.label_tag }}
+            {{ form.login }}
+            {% for error in form.login.errors %}
+            <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        </div>
 
-    {% comment %} <p style="display: flex; align-items: center; gap: 8px;">
-        <label for="{{ form.remember.id_for_label }}">Запомнить меня</label>
-        {{ form.remember }}
-        {{ form.remember.errors }}
-    </p> {% endcomment %}
+        <div class="form-group">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            {% for error in form.password.errors %}
+            <div class="field-error">{{ error }}</div>
+            {% endfor %}
+    </div>
 
-    <button type="submit">Войти</button>
-</form>
+    <button type="submit" class="btn">Войти</button>
+    </form>
+
 
     <div class="form-links">
         <a href="{% url 'account_reset_password' %}">Забыли пароль?</a>

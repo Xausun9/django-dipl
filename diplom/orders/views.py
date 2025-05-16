@@ -24,7 +24,7 @@ def create_order(request):
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
-            order.name = request.user.full_name
+            order.full_name = request.user.full_name
             order.group = request.user.group
             order.save()
             return redirect("orders:create_order")

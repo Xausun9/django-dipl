@@ -234,6 +234,12 @@ td.status,
 	/* text-align: center; */
 }
 
+.form-error {
+    color: #c0392b;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
 .form-card h2 {
 	text-align: center;
 	margin-bottom: 10px;
@@ -353,38 +359,6 @@ td.status,
 
 /* Адаптивность */
 @media (max-width: 768px) {
-	main.container {
-		margin: 20px;
-		padding: 20px;
-	}
-
-	header {
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 10px;
-	}
-
-	nav {
-		flex-wrap: wrap;
-		gap: 8px;
-	}
-
-	h1 {
-		font-size: 22px;
-	}
-
-	input,
-	select,
-	textarea,
-	button {
-		font-size: 15px;
-	}
-
-	th,
-	td {
-		font-size: 14px;
-	}
-
 	.orders-table thead {
 		display: none;
 	}
@@ -407,16 +381,57 @@ td.status,
 
 	.orders-table td {
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
 		padding: 10px 0;
+		gap: 12px;
 	}
 
 	.orders-table td::before {
 		content: attr(data-label);
-		font-weight: bold;
-		margin-right: 10px;
+		font-weight: 600;
+		flex-shrink: 0;
+		text-align: left;
+		min-width: 100px;
+		display: flex;
+		align-items: center;
 	}
+
+	.orders-table input[type="text"],
+	.orders-table select,
+	.orders-table button {
+		display: flex;
+		align-items: center;
+		justify-content: center; 
+		height: 32px; 
+		line-height: 1.2;
+		padding: 0 12px;
+		font-size: 15px;
+		margin-top: 0px;
+	}
+
+	.orders-table button {
+		background-color: var(--accent);
+		color: white;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+		border: none;
+	}
+
+	.orders-table button:hover {
+		background-color: var(--accent-hover);
+	}
+
+	/* .orders-table input,
+	.orders-table select,
+	.orders-table button {
+		margin-top: 0px;
+		height: 30px;
+	} */
+
 }
+
 
 @media (max-width: 600px) {
 
@@ -436,4 +451,19 @@ td.status,
 	.form-card {
 		padding: 20px 16px;
 	}
+}
+
+.status.in_anticipation {
+    color: orange;
+    font-weight: 600;
+}
+
+.status.ready {
+    color: green;
+    font-weight: 600;
+}
+
+.status.rejected {
+    color: red;
+    font-weight: 600;
 }

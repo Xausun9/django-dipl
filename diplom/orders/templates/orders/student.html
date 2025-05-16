@@ -32,7 +32,7 @@
                     {% for order in orders %}
                     <tr>
                         <td>{{ order.quantity }}</td>
-                        <td class="status">{{ order.get_status_display }}</td>
+                        <td class="status {{ order.status }}">{{ order.get_status_display }}</td>
                         <td>{{ order.comment|default:"—" }}</td>
                         <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
                     </tr>

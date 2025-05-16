@@ -39,14 +39,14 @@ class CustomUser(AbstractUser, PermissionsMixin):
         ("admin", "Администратор"),
     )
 
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    role = models.CharField(verbose_name="Роль", max_length=20, choices=ROLE_CHOICES)
 
-    email = models.EmailField(unique=True)
-    full_name = models.CharField(max_length=255, blank=True)
-    group = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(verbose_name="Электронная почта", unique=True)
+    full_name = models.CharField(verbose_name="ФИО", max_length=255, blank=True)
+    group = models.CharField(verbose_name="Группа", max_length=50, blank=True)
 
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(verbose_name="Активен", default=True)
+    is_staff = models.BooleanField(verbose_name="Сотрудник", default=False)
 
     objects = CustomUserManager()
 

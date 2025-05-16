@@ -2,14 +2,35 @@
 {% block title %}Профиль{% endblock %}
 
 {% block content %}
-<div class="form-card">
-    <h2>Профиль</h2>
-    <p class="form-subtitle">Заполните или обновите информацию о себе</p>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Сохранить</button>
-    </form>
-</div>
+    <div class="form-card">
+        <h2>Профиль</h2>
+        <p class="form-subtitle">Заполните или обновите информацию о себе</p>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-help">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                <div class="form-error">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn">Сохранить</button>
+        </form>
+    </div>
+
 {% endblock %}

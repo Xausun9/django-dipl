@@ -5,10 +5,19 @@
 <div class="form-card">
     <h2>Регистрация</h2>
 
-    <form method="post" action="{% url 'account_signup' %}">
+    <form method="post" action="{% url 'account_signup' %}" class="register-form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Зарегистрироваться</button>
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="form-error">{{ field.errors|striptags }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="form-submit">Зарегистрироваться</button>
     </form>
 
     <div class="form-links">

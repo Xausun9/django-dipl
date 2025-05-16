@@ -16,12 +16,26 @@
             <i class="fa-solid fa-file-lines"></i> Справки
         </div>
         <nav>
-            {% if user.is_authenticated %}
-                <span>{{ user.full_name|default:user.email }}</span>
-                <a href="{% url 'account_logout' %}">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Выйти
+        {% if user.is_authenticated %}
+            {% if user.role == "admin" %}
+                <a href="{% url 'orders:secretary' %}">
+                    <i class="fa-solid fa-clipboard-list"></i> Страница секретаря
+                </a>
+                <a href="{% url 'orders:create_order' %}">
+                    <i class="fa-solid fa-plus"></i> Страница студента
                 </a>
             {% endif %}
+            
+            <a href="{% url 'users:complete_profile' %}" class="user-link">
+                {{ user.full_name|default:user.email }}
+            </a>
+            
+            <a href="{% url 'account_logout' %}">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Выйти
+            </a>
+            
+
+        {% endif %}
         </nav>
     </header>
 

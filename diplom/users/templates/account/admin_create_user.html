@@ -2,6 +2,16 @@
 {% block title %}Админ-панель{% endblock %}
 
 {% block content %}
+
+<h2>Создать нового пользователя</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать</button>
+</form>
+
+<hr class="divider">
+
 <h1>Пользователи</h1>
 
 <form method="get">
@@ -26,14 +36,10 @@
     </tr>
     {% endfor %}
 </table>
+
 {% else %}
 <div class="empty">Нет пользователей по заданному запросу.</div>
 {% endif %}
 
-<h2>Создать нового пользователя</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Создать</button>
-</form>
+
 {% endblock %}
