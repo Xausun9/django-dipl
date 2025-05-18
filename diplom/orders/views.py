@@ -5,18 +5,6 @@ from .forms import OrderForm, UpdateOrderForm
 
 
 @login_required
-def index(request):
-    user = request.user
-
-    if user.role == "student":
-        return redirect("orders:create_order")
-    elif user.role == "secretary":
-        return redirect("orders:secretary")
-    elif user.role == "admin":
-        return redirect("users:admin_create_user")
-
-
-@login_required
 def create_order(request):
     orders = Order.objects.filter(user=request.user).order_by("-created_at")
     if request.method == "POST":
@@ -36,7 +24,7 @@ def create_order(request):
 @login_required
 def secretary_view(request):
     if not request.user.is_authenticated or request.user.role not in ["secretary", "admin"]:
-        return redirect("orders:index")
+        return redirect("users:redirect_by_role")
 
     orders = Order.objects.filter(status="in_anticipation")
 

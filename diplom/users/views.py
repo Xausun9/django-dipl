@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import redirect, render
 
@@ -11,12 +12,24 @@ from users.models import CustomUser
 User = get_user_model()
 
 
+@login_required
+def redirect_by_role(request):
+    user = request.user
+
+    if user.role == "student":
+        return redirect("orders:create_order")
+    elif user.role == "secretary":
+        return redirect("orders:secretary")
+    elif user.role == "admin":
+        return redirect("users:admin_create_user")
+
+
 def complete_profile(request):
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect("orders:index")
+            return redirect("users:redirect_by_role")
     else:
         form = ProfileUpdateForm(instance=request.user)
     return render(request, "account/complete_profile.html", {"form": form})
@@ -30,23 +43,17 @@ def admin_create_user(request):
 
     # Подзапрос: ищем подтверждённый email для каждого пользователя
     email_verified_subquery = EmailAddress.objects.filter(
-        user=OuterRef('pk'),
-        email=OuterRef('email'),
-        verified=True
+        user=OuterRef("pk"), email=OuterRef("email"), verified=True
     )
 
     # Берём пользователей сразу с аннотацией
     users = (
-        CustomUser.objects
-        .all()
+        CustomUser.objects.all()
         .annotate(is_email_verified=Exists(email_verified_subquery))
-        .prefetch_related('emailaddress_set')  # на случай, если захочется детали почт
+        .prefetch_related("emailaddress_set")  # на случай, если захочется детали почт
     )
     if query:
-        users = users.filter(
-            Q(email__icontains=query) |
-            Q(full_name__icontains=query)
-        )
+        users = users.filter(Q(email__icontains=query) | Q(full_name__icontains=query))
 
     # Обработка формы создания (без изменений)
     if request.method == "POST":
@@ -67,11 +74,16 @@ def admin_create_user(request):
     else:
         form = AdminUserCreationForm()
 
-    return render(request, "account/admin_create_user.html", {
-        "form": form,
-        "users": users,
-        "query": query,
-    })
+    return render(
+        request,
+        "account/admin_create_user.html",
+        {
+            "form": form,
+            "users": users,
+            "query": query,
+        },
+    )
+
 
 def send_password_set_email(request, user):
     """Корректно отправляем письмо для установки пароля"""

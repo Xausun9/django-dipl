@@ -8,6 +8,7 @@ app_name = "users"
 
 
 urlpatterns = [
+    path('', views.redirect_by_role, name='redirect_by_role'),
     path("complete-profile/", views.complete_profile, name="complete_profile"),
     path("register/", SignupView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),
