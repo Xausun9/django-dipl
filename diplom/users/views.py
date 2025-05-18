@@ -24,12 +24,13 @@ def redirect_by_role(request):
         return redirect("users:admin_create_user")
 
 
+@login_required
 def complete_profile(request):
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect("users:redirect_by_role")
+            return redirect("redirect_by_role")
     else:
         form = ProfileUpdateForm(instance=request.user)
     return render(request, "account/complete_profile.html", {"form": form})
