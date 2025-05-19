@@ -42,21 +42,18 @@ def admin_create_user(request):
 
     query = request.GET.get("q", "")
 
-    # Подзапрос: ищем подтверждённый email для каждого пользователя
     email_verified_subquery = EmailAddress.objects.filter(
         user=OuterRef("pk"), email=OuterRef("email"), verified=True
     )
 
-    # Берём пользователей сразу с аннотацией
     users = (
         CustomUser.objects.all()
         .annotate(is_email_verified=Exists(email_verified_subquery))
-        .prefetch_related("emailaddress_set")  # на случай, если захочется детали почт
+        .prefetch_related("emailaddress_set") 
     )
     if query:
         users = users.filter(Q(email__icontains=query) | Q(full_name__icontains=query))
 
-    # Обработка формы создания (без изменений)
     if request.method == "POST":
         form = AdminUserCreationForm(request.POST)
         if form.is_valid():
@@ -87,7 +84,6 @@ def admin_create_user(request):
 
 
 def send_password_set_email(request, user):
-    """Корректно отправляем письмо для установки пароля"""
     form = ResetPasswordForm({"email": user.email})
     if form.is_valid():
         form.save(request=request, use_https=request.is_secure())
