@@ -14,7 +14,9 @@ def create_order(request):
             order.user = request.user
             order.full_name = request.user.full_name
             order.group = request.user.group
+            order.birth_date = request.user.birth_date
             order.save()
+            print(order.birth_date)
             return redirect("orders:create_order")
     else:
         form = OrderForm()

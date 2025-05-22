@@ -15,7 +15,14 @@
         <div class="logo">
             <i class="fa-solid fa-file-lines"></i> Справки
         </div>
-        <nav>
+
+        <button class="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
+
+        <nav id="main-nav" class="nav-links">
         {% if user.is_authenticated %}
             {% if user.role == "admin" %}
                 <a href="{% url 'orders:secretary' %}">
@@ -28,7 +35,7 @@
                     <i class="fa-solid fa-plus"></i> Страница администратора
                 </a>
             {% endif %}
-            
+
             <a href="{% url 'users:complete_profile' %}" class="user-link">
                 {{ user.full_name|default:user.email }}
             </a>
@@ -36,8 +43,6 @@
             <a href="{% url 'account_logout' %}">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Выйти
             </a>
-            
-
         {% endif %}
         </nav>
     </header>
@@ -46,6 +51,20 @@
         {% block content %}{% endblock %}
     </main>
 
-{% block extra_js %}{% endblock extra_js %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const burger = document.querySelector('.burger');
+    const nav = document.querySelector('nav.nav-links');
+
+    burger.addEventListener('click', () => {
+        nav.classList.toggle('active');
+        const expanded = burger.getAttribute('aria-expanded') === 'true';
+        burger.setAttribute('aria-expanded', String(!expanded));
+    });
+    });
+</script>
+
+{% endblock extra_js %}
 </body>
 </html>

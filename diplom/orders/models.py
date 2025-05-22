@@ -14,6 +14,7 @@ class Order(models.Model):
     )
     full_name = models.CharField(max_length=50, verbose_name="ФИО")
     group = models.CharField(max_length=10, verbose_name="Группа")
+    birth_date = models.DateField(verbose_name="Дата рождения", null=True)
     quantity = models.PositiveIntegerField(default=1, verbose_name="Количество")
     status = models.CharField(
         max_length=20,

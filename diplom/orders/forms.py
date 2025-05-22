@@ -16,9 +16,3 @@ class UpdateOrderForm(forms.ModelForm):
         model = Order
         fields = ["status", "comment"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["comment"].widget.attrs[
-            "placeholder"
-        ] = "Комментарий"

@@ -21,6 +21,8 @@
 </form>
 
 {% if users %}
+<div class="table-wrapper">
+
 <table>
     <tr>
         <th>ФИО / Email</th>
@@ -49,6 +51,7 @@
 {% else %}
 <div class="empty">Нет пользователей по заданному запросу.</div>
 {% endif %}
+</div>
 
 <script>
     document.querySelectorAll('.delete-user-btn').forEach(button => {
