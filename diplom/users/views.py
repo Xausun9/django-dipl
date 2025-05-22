@@ -11,6 +11,7 @@ from allauth.account.models import EmailAddress
 from users.forms import AdminUserCreationForm, ProfileUpdateForm
 from users.models import CustomUser
 
+
 User = get_user_model()
 
 

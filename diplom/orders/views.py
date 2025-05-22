@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Order
-from .forms import OrderForm, UpdateOrderForm
+
+from orders.models import Order
+from orders.forms import OrderForm, UpdateOrderForm
 
 
 @login_required
@@ -25,7 +26,10 @@ def create_order(request):
 
 @login_required
 def secretary_view(request):
-    if not request.user.is_authenticated or request.user.role not in ["secretary", "admin"]:
+    if not request.user.is_authenticated or request.user.role not in [
+        "secretary",
+        "admin",
+    ]:
         return redirect("redirect_by_role")
 
     orders = Order.objects.filter(status="in_anticipation")

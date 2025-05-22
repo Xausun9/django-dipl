@@ -1,4 +1,8 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.db import models
 from allauth.account.models import EmailAddress
 
@@ -21,12 +25,11 @@ class CustomUserManager(BaseUserManager):
         user = self.create_user(email, password, **extra_fields)
 
         EmailAddress.objects.get_or_create(
-            user=user,
-            email=user.email,
-            defaults={"verified": True, "primary": True}
+            user=user, email=user.email, defaults={"verified": True, "primary": True}
         )
 
         return user
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
