@@ -6,6 +6,7 @@
 <h2>Создать нового пользователя</h2>
 <form method="post">
     {% csrf_token %}
+    <input type="hidden" name="create_user" value="1">
     {{ form.as_p }}
     <button type="submit">Создать</button>
 </form>
@@ -23,23 +24,57 @@
 <table>
     <tr>
         <th>ФИО / Email</th>
-        <th>Роль</th>
         <th>Группа</th>
+        <th>Роль</th>
         <th>Подтверждён</th>
+        <th>Действия</th>
     </tr>
     {% for user in users %}
     <tr>
         <td>{{ user.full_name|default:user.email }}</td>
-        <td>{{ user.get_role_display }}</td>
         <td>{{ user.group|default:"—" }}</td>
+        <td>{{ user.get_role_display }}</td>
         <td>{{ user.is_email_verified|yesno:"Да,Нет" }}</td>
+        <td>
+    <button type="button"
+            class="delete-user-btn"
+            data-user-id="{{ user.id }}"
+            {% if user == request.user %}disabled{% endif %}>
+        Удалить
+    </button>
+</td>
     </tr>
     {% endfor %}
 </table>
-
 {% else %}
 <div class="empty">Нет пользователей по заданному запросу.</div>
 {% endif %}
+
+<script>
+    document.querySelectorAll('.delete-user-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            if (!confirm('Удалить пользователя?')) return;
+            
+            fetch("{% url 'users:delete_user_ajax' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `user_id=${userId}`
+            }).then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const row = this.closest("tr");
+                    row.remove();
+                } else {
+                    alert("Ошибка: " + (data.error || "Не удалось удалить"));
+                }
+            });
+        });
+    });
+</script>
 
 
 {% endblock %}

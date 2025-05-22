@@ -8,10 +8,12 @@ class CompleteProfileMiddleware:
     def __call__(self, request):
         user = request.user
         if user.is_authenticated:
+            
             needs_full_name = not user.full_name
             needs_group = user.role == 'student' and not user.group
-
-            if needs_full_name or needs_group:
+            needs_birth_date = user.role == 'student' and not user.birth_date
+            
+            if needs_full_name or needs_group or needs_birth_date:
                 complete_profile_url = reverse('users:complete_profile')
                 if request.path != complete_profile_url:
                     return redirect(complete_profile_url)

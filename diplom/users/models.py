@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from allauth.account.models import EmailAddress
 
@@ -13,13 +13,12 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_field):
-        username = None
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("role", "admin")
 
-        extra_field.setdefault("is_staff", True)
-        extra_field.setdefault("is_superuser", True)
-        extra_field.setdefault("role", "admin")
-        user = self.create_user(email, password, **extra_field)
+        user = self.create_user(email, password, **extra_fields)
 
         EmailAddress.objects.get_or_create(
             user=user,
@@ -29,29 +28,32 @@ class CustomUserManager(BaseUserManager):
 
         return user
 
-
-class CustomUser(AbstractUser, PermissionsMixin):
-    username = None
-
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ("student", "Студент"),
         ("secretary", "Секретарь"),
         ("admin", "Администратор"),
     )
 
-    role = models.CharField(verbose_name="Роль", max_length=20, choices=ROLE_CHOICES)
-
     email = models.EmailField(verbose_name="Электронная почта", unique=True)
     full_name = models.CharField(verbose_name="ФИО", max_length=255, blank=True)
     group = models.CharField(verbose_name="Группа", max_length=50, blank=True)
+    role = models.CharField(verbose_name="Роль", max_length=20, choices=ROLE_CHOICES)
+
+    birth_date = models.DateField(verbose_name="Дата рождения", null=True, blank=True)
 
     is_active = models.BooleanField(verbose_name="Активен", default=True)
     is_staff = models.BooleanField(verbose_name="Сотрудник", default=False)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
 
     def __str__(self):
         return self.email if not self.full_name else self.full_name

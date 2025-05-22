@@ -13,4 +13,6 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("admin-create-user/", views.admin_create_user, name="admin_create_user"),
+    path('delete-user-ajax/', views.delete_user_ajax, name='delete_user_ajax'),
+
 ]
