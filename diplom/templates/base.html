@@ -25,11 +25,11 @@
         <nav id="main-nav" class="nav-links">
         {% if user.is_authenticated %}
             {% if user.role == "admin" %}
-                <a href="{% url 'orders:secretary' %}">
-                    <i class="fa-solid fa-clipboard-list"></i> Страница секретаря
-                </a>
                 <a href="{% url 'orders:create_order' %}">
                     <i class="fa-solid fa-plus"></i> Страница студента
+                </a>    
+                <a href="{% url 'orders:secretary' %}">
+                    <i class="fa-solid fa-clipboard-list"></i> Страница секретаря
                 </a>
                 <a href="{% url 'users:admin_create_user' %}">
                     <i class="fa-solid fa-plus"></i> Страница администратора
