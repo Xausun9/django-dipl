@@ -12,9 +12,11 @@
 </head>
 <body>
     <header>
-        <div class="logo">
-            <i class="fa-solid fa-file-lines"></i> Справки
-        </div>
+        <a href="{% url "users:redirect_by_role" %}">
+            <div class="logo">
+                <i class="fa-solid fa-file-lines"></i> Справки
+            </div>
+        </a>
 
         <button class="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav">
             <span class="burger-line"></span>
