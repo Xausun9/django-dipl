@@ -26,7 +26,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
         fields_to_hide_by_role = {
             "admin": ["group", "birth_date"],
-            "secretary": ["group"],
+            "secretary": ["group", "birth_date"],
         }
 
         role = getattr(user, "role", None)
