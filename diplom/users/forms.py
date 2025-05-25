@@ -18,7 +18,7 @@ class ProfileUpdateForm(forms.ModelForm):
         placeholders = {
             "full_name": "Введите ФИО",
             "group": "Введите группу",
-            "birth_date": "Введите дату рождения",
+            "birth_date": "Введите дату рождения (ДД.ММ.ГГ)",
         }
         for field_name, placeholder in placeholders.items():
             if field_name in self.fields:
