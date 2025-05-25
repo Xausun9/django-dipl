@@ -76,7 +76,7 @@ def admin_create_user(request):
     )
 
     users = (
-        CustomUser.objects.all()
+        CustomUser.objects.all().order_by("group")
         .annotate(is_email_verified=Exists(email_verified_subquery))
         .prefetch_related("emailaddress_set")
     )
