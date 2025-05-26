@@ -9,7 +9,6 @@ from allauth.account.forms import ResetPasswordForm
 from allauth.account.models import EmailAddress
 
 from users.forms import AdminUserCreationForm, ProfileUpdateForm
-from users.models import CustomUser
 
 
 User = get_user_model()
@@ -48,7 +47,7 @@ def admin_create_user(request):
 
     if request.method == "POST" and "delete_user_id" in request.POST:
         user_id = request.POST.get("delete_user_id")
-        user_to_delete = get_object_or_404(CustomUser, id=user_id)
+        user_to_delete = get_object_or_404(User, id=user_id)
         if user_to_delete != request.user:
             user_to_delete.delete()
         return redirect("users:admin_create_user")
@@ -57,7 +56,7 @@ def admin_create_user(request):
         form = AdminUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            temp_password = CustomUser.objects.make_random_password()
+            temp_password = User.objects.make_random_password()
             user.set_password(temp_password)
             user.is_active = True
             user.save()
@@ -76,7 +75,7 @@ def admin_create_user(request):
     )
 
     users = (
-        CustomUser.objects.all().order_by("group")
+        User.objects.all().order_by("group")
         .annotate(is_email_verified=Exists(email_verified_subquery))
         .prefetch_related("emailaddress_set")
     )
@@ -114,7 +113,7 @@ def delete_user_ajax(request):
             {"success": False, "error": "Не указан пользователь"}, status=400
         )
 
-    user_to_delete = get_object_or_404(CustomUser, id=user_id)
+    user_to_delete = get_object_or_404(User, id=user_id)
 
     if user_to_delete == request.user:
         return JsonResponse(
